@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
-	"net/url"
 
 	"github.com/golang/protobuf/proto"
 
@@ -137,16 +136,6 @@ func generateConfig() (*core.Config, error) {
 	var connectionReuse bool
 	switch *mode {
 	case "websocket":
-		var ed uint32
-		if u, err := url.Parse(*path); err == nil {
-			if q := u.Query(); q.Get("ed") != "" {
-				Ed, _ := strconv.Atoi(q.Get("ed"))
-				ed = uint32(Ed)
-				q.Del("ed")
-				u.RawQuery = q.Encode()
-				*path = u.String()
-			}
-		}
 		transportSettings = &websocket.Config{
 			Path: *path,
 			Header: []*websocket.Header{
